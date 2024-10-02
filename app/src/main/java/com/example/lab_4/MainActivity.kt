@@ -2,6 +2,7 @@ package com.example.lab_4
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -20,10 +21,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
     private lateinit var questionTextView: TextView
+    var id_Quistion=1
     private val quizViewModel:QuizViewModel by lazy {
         ViewModelProvider(this).get(QuizViewModel::class.java)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +35,9 @@ class MainActivity : AppCompatActivity() {
         val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
         quizViewModel.currentIndex = currentIndex
         val provider: ViewModelProvider = ViewModelProvider(this)
-        val quizViewModel =
-            provider.get(QuizViewModel::class.java)
+        val quizViewModel = provider.get(QuizViewModel::class.java)
         Log.d(TAG, "Got a QuizViewModel:$quizViewModel")
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -52,16 +53,25 @@ class MainActivity : AppCompatActivity() {
         trueButton.setOnClickListener()
         {
             checkAnswer(true)
+            trueButton.visibility= View.INVISIBLE
+            falseButton.visibility= View.INVISIBLE
         }
         falseButton.setOnClickListener()
         {
             checkAnswer(false)
+            trueButton.visibility= View.INVISIBLE
+            falseButton.visibility= View.INVISIBLE
         }
 
         nextButton.setOnClickListener()
         {
             quizViewModel.moveToNext()
             updateQuestion()
+            trueButton.visibility= View.VISIBLE
+            falseButton.visibility= View.VISIBLE
+            id_Quistion++
+            if(id_Quistion==6)
+                nextButton.visibility=View.INVISIBLE
         }
         updateQuestion()
     }
@@ -90,7 +100,6 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG,"onSaveInstanceState")
         savedInstanceState.putInt(KEY_INDEX,quizViewModel.currentIndex)
     }
-
     override fun onStop()
     {
         super.onStop()
