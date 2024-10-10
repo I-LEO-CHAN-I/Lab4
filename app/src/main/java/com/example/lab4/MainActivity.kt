@@ -1,4 +1,4 @@
-package com.example.lab_4
+package com.example.lab4
 
 
 import android.annotation.SuppressLint
